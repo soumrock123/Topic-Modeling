@@ -1,0 +1,21 @@
+
+ 
+ life_insurance_glossary = ['accidental death benefit', 'accumulation value', 'adjustable life', 'attained age', 'automatic premium loan', 'beneficiary', 'cash value', 'contingent beneficiary', 'contributory', 'credit life insurance', 'death benefit', 'decreasing term', 'dependent coverage', 'dependent life insurance', 'dividend accumulation', 'dividend additions', 'dividend option', 'extended term insurance', 'face amount', 'family income policy', 'flexible premium', 'free look', 'grace period', 'group life insurance', 'guaranteed renewable', 'incidents of ownership', 'incontestable clause', 'irrevocable beneficiary', 'life insurance', 'life insured', 'loan value', 'maturity date', 'net surrender value', 'noncontributory', 'nonforfeiture values', 'ordinary life policy', 'permanent life insurance', 'policy loan', 'policy anniversary', 'preferred risk', 'premium loading', 'primary beneficiary', 'rated', 'reinstatement', 'renewable term', 'return of premium', 'revocable beneficiary', 'secondary beneficiary', 'settlement options', 'sum insured', 'surrender', 'term life insurance', 'universal life', 'variable life', 'variable universal life', 'waiver of premium', 'war clause', 'waiting period', 'whole life']
+
+    car_insurance_glossary = ['abi', 'actual cash value', 'act of god', 'approved repairer', 'betterment', 'car insurance excess', 'car insurance policy', 'car market value', 'casualty', 'certificate of insurance', 'claim', 'class of use', 'collision coverage', 'combined single limit', 'comprehensive coverage', 'compulsory excess', 'declarations page', 'declination', 'deductible', 'depreciation', 'driver education credit', 'doc cover', 'endorsement', 'exclusions', 'extended coverage', 'south africa', 'classical music', 'fault claim', 'fca', 'financial responsibility law', 'free look period', 'fronting', 'grace period', 'indemnity', 'independent agent', 'insurance premium tax', 'lapse', 'loss adjuster', 'motor vehicle report', 'no fault insurance', 'no claims discount', 'non fault claim', 'ogden rate', 'period of insurance', 'personal injury protection', 'policy schedule', 'premium', 'replacement cost', 'residual value' 'settlement', 'split limit', 'statement of fact', 'subrogation', 'telematics car insurance', 'third party car', 'underwriter', 'uninsured loss recovery', 'voluntary excess']
+
+    health_insurance_glossary = ['accident', 'allowed amount', 'actuarial justification', 'adjusted community rating', 'annual limit', 'balance billing', 'chip', 'coinsurance', 'community rating', 'copayment', 'cost sharing', 'coverage period', 'covered person', 'creditable coverage', 'deductible', 'dental coverage', 'dependent', 'disease management', 'durable medical equipment', 'effective date', 'emergency room care', 'essential health benefits', 'excluded services', 'exclusions', 'exemption', 'experimental treatment', 'external review', 'formulary', 'grace period', 'group health plan', 'guaranteed issue', 'guaranteed renewability', 'health coverage', 'health insurance', 'health maintenance organization', 'health status', 'home health care', 'hospitalization', 'hospital outpatient care', 'individual mandate', 'inpatient care', 'limited benefits plan', 'mandated benefit', 'medicaid', 'medical loss ratio', 'medicare', 'medicare advantage', 'medical underwriting', 'minimum essential coverage', 'open enrollment period', 'outpatient', 'policy term', 'pre existing condition', 'premium', 'preventive benefits', 'qualified health plan', 'rate review', 'rehabilitation services', 'self insured', 'solvency', 'subsidized coverage', 'skilled nursing care', 'ucr', 'urgent care center', 'vision coverage', 'wellness programs']
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+																										
+																									
