@@ -286,7 +286,7 @@ def main():
                               r'C:\Xxxxxx\PycharmProjects\Speech_Recognition\output', '-nt', '3', '-w',
                               '15'])
 
-    # video2speech(args.testpath)
+    video2speech(args.testpath)
     life_insurance, car_insurance, health_insurance = terms_from_file(args.filepath)
     # insurance_classification(args.testpath, life_insurance, car_insurance, health_insurance)
     insurance_tfidf(args.testpath, life_insurance, car_insurance, health_insurance)
