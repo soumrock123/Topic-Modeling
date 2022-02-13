@@ -1,9 +1,9 @@
 
 
 # Created on 18.03.2020
-# @Author : Soumya Chakraborty (soumya.chakraborty@im-c.de)
 
 
+# Importing all the necessary libraries
 import gensim
 import nltk
 import speech_recognition as sr
@@ -30,6 +30,8 @@ from gensim.models import CoherenceModel
 
 
 
+# Method definition to detect video files, extract the audio out of them and finally extracting the speech using Google Speech API and 
+# storing them as text files with the same names. Languages supported are English and German(Deutsch)
 def video2speech(testpath):
     rec = sr.Recognizer()
     rec.energy_threshold = 500
@@ -74,8 +76,68 @@ def video2speech(testpath):
 
 
 
+                        
+# Method definition to extract tokens out of the speech textfiles. Languages supported are English and German(Deutsch)
+def tokenization(testpath):
+    for filename in os.listdir(testpath):
+        if filename.endswith('.txt'):
+            file_content = open(os.path.join(testpath, filename), encoding='utf-8').read()
+            b = TextBlob('"' + file_content + '"')
+            if b.detect_language() == 'en':
+                stop_words = stopwords.words('english')
+                word_tokens = simple_preprocess(str(file_content), deacc=True)
+                return word_tokens, stop_words
+            elif b.detect_language() == 'de':
+                stop_words = stopwords.words('german')
+                tokenizer = RegexpTokenizer('[a-zA-Z_äöüÄÖÜß]{4,}')
+                word_tokens = tokenizer.tokenize(file_content)
+                return word_tokens, stop_words
+            else:
+                print('ERROR : Unfortunately this language is not supported !!')
+                
+    
+ 
+
+# Method definition to extract commonly occurring multigrams (bigrams and trigrams) out of the tokens
+def multigram(tokens, stop_words, num):
+    nostops = [word for word in tokens if word not in stop_words]
+    if num==2:
+        bigram_measures = nltk.collocations.BigramAssocMeasures()
+        finder = BigramCollocationFinder.from_words(nostops)
+        finder.apply_freq_filter(3)
+        bigrams = [[a, b] for (a, b) in finder.nbest(bigram_measures.pmi, 30)]
+        return bigrams
+    elif num==3:
+        trigram_measures = nltk.collocations.TrigramAssocMeasures()
+        finder = TrigramCollocationFinder.from_words(nostops)
+        finder.apply_freq_filter(3)
+        trigrams = [[a, b, c] for (a, b, c) in finder.nbest(trigram_measures.pmi, 30)]
+        return trigrams
+    elif num>3:
+        print('Unfortunately higher order multigrams are not supported !!')
 
 
+ 
+
+# Method definition to extract the terms for comparison out of some domain (Insurance) related textfiles
+def terms_from_file(filepath):
+    for filename in os.listdir(filepath):
+        if os.path.splitext(filename)[0] == 'Insurance' and filename.endswith('.txt'):
+            ins_terms = dict()
+            with open(filename) as file:
+                for line in file:
+                    index = line.find('=')
+                    val = line[:index].strip()
+                    number = str(line[index + 1:].strip())
+                    ins_terms[val] = number
+    life_insurance = ins_terms['life_insurance_glossary']
+    car_insurance = ins_terms['car_insurance_glossary']
+    health_insurance = ins_terms['health_insurance_glossary']
+    return life_insurance, car_insurance, health_insurance
+ 
+    
+    
+# Definition of the LDA Model which analyses the speech-to-text content and finds the closest matching topics
 def ldamodel_test(testpath):
     word_tokens, stop_words = tokenization(testpath)
     tokens = [[word for word in simple_preprocess(str(doc)) if word not in stop_words] for doc in word_tokens]
@@ -100,7 +162,7 @@ def ldamodel_test(testpath):
 
 
 
-
+# Definition of the Non-negative Factorisation Model which analyses the speech-to-text content and finds the closest matching topics
 def nmfmodel_test(testpath, num_topics, num_words):
     word_tokens, stop_words = tokenization(testpath)
     bigrams = multigram(word_tokens, stop_words, 2)
@@ -141,64 +203,8 @@ def nmfmodel_test(testpath, num_topics, num_words):
 
 
 
-def multigram(tokens, stop_words, num):
-    nostops = [word for word in tokens if word not in stop_words]
-    if num==2:
-        bigram_measures = nltk.collocations.BigramAssocMeasures()
-        finder = BigramCollocationFinder.from_words(nostops)
-        finder.apply_freq_filter(3)
-        bigrams = [[a, b] for (a, b) in finder.nbest(bigram_measures.pmi, 30)]
-        return bigrams
-    elif num==3:
-        trigram_measures = nltk.collocations.TrigramAssocMeasures()
-        finder = TrigramCollocationFinder.from_words(nostops)
-        finder.apply_freq_filter(3)
-        trigrams = [[a, b, c] for (a, b, c) in finder.nbest(trigram_measures.pmi, 30)]
-        return trigrams
-    elif num>3:
-        print('Unfortunately higher order multigrams are not supported !!')
-
-
-
-
-def tokenization(testpath):
-    for filename in os.listdir(testpath):
-        if filename.endswith('.txt'):
-            file_content = open(os.path.join(testpath, filename), encoding='utf-8').read()
-            b = TextBlob('"' + file_content + '"')
-            if b.detect_language() == 'en':
-                stop_words = stopwords.words('english')
-                word_tokens = simple_preprocess(str(file_content), deacc=True)
-                return word_tokens, stop_words
-            elif b.detect_language() == 'de':
-                stop_words = stopwords.words('german')
-                tokenizer = RegexpTokenizer('[a-zA-Z_äöüÄÖÜß]{4,}')
-                word_tokens = tokenizer.tokenize(file_content)
-                return word_tokens, stop_words
-            else:
-                print('ERROR : Unfortunately this language is not supported !!')
-
-
-
-
-def terms_from_file(filepath):
-    for filename in os.listdir(filepath):
-        if os.path.splitext(filename)[0] == 'Insurance' and filename.endswith('.txt'):
-            ins_terms = dict()
-            with open(filename) as file:
-                for line in file:
-                    index = line.find('=')
-                    val = line[:index].strip()
-                    number = str(line[index + 1:].strip())
-                    ins_terms[val] = number
-    life_insurance = ins_terms['life_insurance_glossary']
-    car_insurance = ins_terms['car_insurance_glossary']
-    health_insurance = ins_terms['health_insurance_glossary']
-    return life_insurance, car_insurance, health_insurance
-
-
-
-
+# Definition of the method which analyses the speech-to-text content and compares them with the term documents
+# in order to find the closest matching topics which ar predefined. It uses only the counts of matching terms
 def insurance_classification(testpath, life_insurance, car_insurance, health_insurance):
     word_tokens, stop_words = tokenization(testpath)
     bigrams = multigram(word_tokens, stop_words, 2)
@@ -233,7 +239,9 @@ def insurance_classification(testpath, life_insurance, car_insurance, health_ins
 
 
 
-
+# Definition of the method which analyses the speech-to-text content and compares them with the term documents
+# in order to find the closest matching topics which ar predefined. It uses the NLP technique of finding 
+# and comparing on the basis of the TF-IDF scores
 def insurance_tfidf(testpath, life_insurance, car_insurance, health_insurance):
     word_tokens, stop_words = tokenization(testpath)
     bigrams = multigram(word_tokens, stop_words, 2)
@@ -263,7 +271,7 @@ def insurance_tfidf(testpath, life_insurance, car_insurance, health_insurance):
 
 
 
-
+# The main() function where the arguments are set and the other methods are called
 def main():
     parser = argparse.ArgumentParser(description='Setting the arguments for the Speech to Text model')
     parser.add_argument('-f', '--filepath', required=True, default='',
@@ -274,8 +282,8 @@ def main():
                         help='The number of topics to be extracted from the text')
     parser.add_argument('-w', '--numwords', required=True, default='',
                         help='The number of words to be displayed for each topic')
-    args = parser.parse_args(['-f', r'C:\Users\schakraborty\PycharmProjects\Speech_Recognition', '-t',
-                              r'C:\Users\schakraborty\PycharmProjects\Speech_Recognition\output', '-nt', '3', '-w',
+    args = parser.parse_args(['-f', r'C:\Xxxxxx\PycharmProjects\Speech_Recognition', '-t',
+                              r'C:\Xxxxxx\PycharmProjects\Speech_Recognition\output', '-nt', '3', '-w',
                               '15'])
 
     # video2speech(args.testpath)
